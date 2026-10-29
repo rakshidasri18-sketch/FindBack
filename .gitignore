@@ -1,0 +1,25 @@
+
+# Java compiled files
+*.class
+
+# MySQL Connector JAR files
+*.jar
+
+# Database passwords and environment files
+.env
+.env.*
+
+# Database backup files
+*.sql.bak
+
+# VS Code local settings
+.vscode/
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.log
+/lib/
