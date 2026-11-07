@@ -1,9 +1,9 @@
-
 import java.sql.*;
 import java.util.ArrayList;
 
 public class ItemDAO {
 
+    // Save a lost or found item
     public static void saveItem(
             String type, String name, String category,
             String color, String location, String description)
@@ -23,6 +23,7 @@ public class ItemDAO {
             ps.setString(3, color);
             ps.setString(4, location);
             ps.setString(5, description);
+
             ps.executeUpdate();
         }
     }
@@ -57,10 +58,11 @@ public class ItemDAO {
                 });
             }
         }
+
         return items;
     }
 
-    // Keep existing compatibility
+    // Existing compatibility method
     public static ArrayList<String[]> getItems(String type)
             throws SQLException {
 
@@ -71,6 +73,7 @@ public class ItemDAO {
                 row[1], row[2], row[3], row[4], row[5]
             });
         }
+
         return items;
     }
 
@@ -100,9 +103,63 @@ public class ItemDAO {
         }
     }
 
+    // Get total number of lost or found items
+    public static int getItemCount(String type) throws SQLException {
+
+        String table = getTable(type);
+
+        String sql = "SELECT COUNT(*) FROM " + table;
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        }
+
+        return 0;
+    }
+
+    // Get number of matched or returned items
+    public static int getStatusCount(String status)
+            throws SQLException {
+
+        if (!status.equals("MATCHED")
+                && !status.equals("RETURNED")) {
+            throw new IllegalArgumentException("Invalid status");
+        }
+
+        String sql = "SELECT COUNT(*) FROM lost_items "
+                + "WHERE UPPER(status) = ?";
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, status.toUpperCase());
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        }
+
+        return 0;
+    }
+
+    // Get database table name safely
     private static String getTable(String type) {
-        if ("lost".equals(type)) return "lost_items";
-        if ("found".equals(type)) return "found_items";
+
+        if ("lost".equals(type)) {
+            return "lost_items";
+        }
+
+        if ("found".equals(type)) {
+            return "found_items";
+        }
+
         throw new IllegalArgumentException("Invalid item type");
     }
 }

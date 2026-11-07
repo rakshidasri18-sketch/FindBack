@@ -489,4 +489,29 @@ public class FindBackGUI extends JFrame {
             () -> new FindBackGUI().setVisible(true)
         );
     }
+// PUBLIC METHODS FOR NEW DASHBOARD
+
+    public void dashboardReportLost() {
+        registerItem(true);
+    }
+
+    public void dashboardReportFound() {
+        registerItem(false);
+    }
+
+    public void dashboardSearchMatches() {
+        searchMatches();
+    }
+
+    public void dashboardViewAllItems() {
+        viewAllItems();
+    }
+
+    public void dashboardManageStatus() {
+        manageStatus();
+    }
+
+    public void dashboardRefresh() {
+        refreshDashboard();
+    }
 }
